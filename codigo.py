@@ -1,6 +1,5 @@
 import requests
 
-
 base_url = "https://api.geoapify.com/v2/places?"
 api_key = "54201da1292642cba162e8375fba069d"
 
