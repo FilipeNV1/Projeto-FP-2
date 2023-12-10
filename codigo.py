@@ -35,8 +35,10 @@ def main():
     while not valid_user_categories:
         usercategories = input("Enter the categories split by comma: ")
         valid_user_categories = validateCategory(usercategories, categorylist)
+        
+    valid_user_categories_str = ','.join(valid_user_categories)
 
-    url = base_url + "categories=" + usercategories + "&filter=circle:" + lon + "," + lat + "," + radiusMeters + "&apiKey=" + api_key
+    url = base_url + "categories=" + valid_user_categories_str + "&filter=circle:" + lon + "," + lat + "," + radiusMeters + "&apiKey=" + api_key
 
     response = requests.get(url)
     print(response.json())
