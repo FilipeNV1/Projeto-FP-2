@@ -76,7 +76,7 @@ def main():
         print(f"Address Line 2: {properties['address_line2']}" if 'address_line2' in properties else "Address line 2: Not available") # Apresenta a 2ª linha do endereço, se disponível na base de dados, (para evitar erros)
         print(f"Categories: {', '.join(properties['categories'])}") # Apresenta a categoria de cada "feature"
         print("\n-------------------------\n") # Separa cada cidade com traços, de modo a ficar mais visível
-        input("Press Enter to continue...", end='\n') # Sistema para mostrar sujestão a sujestão, em que o utilizador pressionar enter (introduzir um caracter em branco) o programa mostra a seguinte sugestão
+        input("Press Enter to continue...") # Sistema para mostrar sujestão a sujestão, em que o utilizador pressionar enter o programa mostra a seguinte sugestão
 
 if __name__ == "__main__":
     main()
