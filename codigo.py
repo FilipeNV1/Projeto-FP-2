@@ -22,28 +22,44 @@ def validateCategory(userinput, validcategories): # Verifica se a categoria intr
             valid_user_categories.append(category)
     return valid_user_categories
 
+def is_float(value): # Função utilizada para validar a latitude e longitude definidas abaixo
+    try:
+        float(value) 
+        return True
+    except ValueError: # Se não for possível passar o valor introduzido a float, dá return False
+        return False
+    
 def main():
-    location = input("Enter your latitude and longitude split by comma: ")
-    lat, lon = location.split(",") # Separa a latitude e a longitude, de modo a ter ambas separadas
+    while True: # O código representado abaixo, basicamente pede uma latitude e uma longitude ao utilizador e verifica se consegue passar a mesma para float, se conseguir, é porque o valor introduzido não é string
+        location = input("Enter your latitude and longitude, split by comma:")
+        lat, lon = location.split(",")  # Separa a latitude e a longitude, de modo a ter ambas separadas
+        if is_float(lat) and is_float(lon): # Se ambas forem validadas como números(negativo ou positivo) o programa para com esta função e avança à seguinte
+            break
+        else:
+            print("Invalid input. Please enter a valid latitude/longitude.")
 
     radiusMeters = input("Enter the radius(m): ")
+    while (radiusMeters.isdigit() or radiusMeters.replace('.', '')) == False: # Caso a distância seja um número negativo ou uma string, o programa não avança
+        radiusMeters = input("Enter a valid radius(m): ")
 
     usercategories = input("Enter the categories split by comma: ")
     
-    categorylist = readfile()
-    valid_user_categories = validateCategory(usercategories, categorylist)
+    categorylist = readfile() # Guarda todas as categorias lidas no ficheiro numa lista
+    valid_user_categories = validateCategory(usercategories, categorylist) # Guarda todas as categorias válidas numa lista
 
     while not valid_user_categories: # Enquanto o utilizador não introduzir uma categoria válida, o programa não avança
         usercategories = input("Enter the categories split by comma: ")
         valid_user_categories = validateCategory(usercategories, categorylist)
         
-    valid_user_categories_str = ','.join(valid_user_categories)
+    valid_user_categories_str = ','.join(valid_user_categories) # Esta parte guarda todas as categorias da lista numa única string, separadas por vírgulas através da função join
 
     url = base_url + "categories=" + valid_user_categories_str + "&filter=circle:" + lon + "," + lat + "," + radiusMeters + "&apiKey=" + api_key
-
+    n = 0
     response = requests.get(url)
     data = response.json()
     for item in data['features']:
+        n+=1
+        print ('Recomendação Número',n,':', end='\n')
         properties = item['properties']
         print(f"Name: {properties['name']}" if 'name' in properties else "Name: Not available") # Apresenta o nome (adicionamos o if/else para evitar um erro)
         print(f"Country: {properties['country']}" if 'country' in properties else "Country: Not available") # Apresenta o país se o mesmo estiver disponível na base de dados (para evitar erros)
@@ -60,6 +76,7 @@ def main():
         print(f"Address Line 2: {properties['address_line2']}" if 'address_line2' in properties else "Address line 2: Not available") # Apresenta a 2ª linha do endereço, se disponível na base de dados, (para evitar erros)
         print(f"Categories: {', '.join(properties['categories'])}") # Apresenta a categoria de cada "feature"
         print("\n-------------------------\n") # Separa cada cidade com traços, de modo a ficar mais visível
+        input("Press Enter to continue...", end='\n') # Sistema para mostrar sujestão a sujestão, em que o utilizador pressionar enter (introduzir um caracter em branco) o programa mostra a seguinte sugestão
 
 if __name__ == "__main__":
     main()
