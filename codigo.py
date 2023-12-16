@@ -1,3 +1,5 @@
+#Autores FilipeViseu Nº 119192 ; DuarteBranco Nº 119253
+
 import requests
 import json
 
