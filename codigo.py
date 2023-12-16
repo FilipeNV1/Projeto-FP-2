@@ -28,18 +28,30 @@ def is_float(value): # Função utilizada para validar a latitude e longitude de
         return True
     except ValueError: # Se não for possível passar o valor introduzido a float, dá return False
         return False
-    
+
+def continue_program(): # Função que permite ao utilizador procurar outras atrações ou sair
+    while True:
+        user_choice = input("Enter 'restart' to restart with new location or 'enter' to exit: ")
+        if user_choice.lower() == 'restart':
+            return True
+        else:
+            return False
+
 def main():
     while True: # O código representado abaixo, basicamente pede uma latitude e uma longitude ao utilizador e verifica se consegue passar a mesma para float, se conseguir, é porque o valor introduzido não é string
-        location = input("Enter your latitude and longitude, split by comma:")
-        lat, lon = location.split(",")  # Separa a latitude e a longitude, de modo a ter ambas separadas
+        location = input("Enter your latitude and longitude, split by comma: ")
+        if ',' not in location:
+            print("Invalid input. Please enter a valid latitude/longitude.")
+            continue
+        lat, lon = location.replace(' ', '').split(",")  
+        lat, lon = location.replace(' ', '').split(",")  # Separa a latitude e a longitude, de modo a ter ambas separadas, sem espaços (caso o utilizador tenha introduzido um)
         if is_float(lat) and is_float(lon): # Se ambas forem validadas como números(negativo ou positivo) o programa para com esta função e avança à seguinte
             break
         else:
             print("Invalid input. Please enter a valid latitude/longitude.")
 
     radiusMeters = input("Enter the radius(m): ")
-    while (radiusMeters.isdigit() or radiusMeters.replace('.', '')) == False: # Caso a distância seja um número negativo ou uma string, o programa não avança
+    while (radiusMeters.isdigit() or radiusMeters.replace('.', '').isdigit()) == False: # Caso a distância seja um número negativo ou uma string, o programa não avança
         radiusMeters = input("Enter a valid radius(m): ")
 
     usercategories = input("Enter the categories split by comma: ")
@@ -77,6 +89,12 @@ def main():
         print(f"Categories: {', '.join(properties['categories'])}") # Apresenta a categoria de cada "feature"
         print("\n-------------------------\n") # Separa cada cidade com traços, de modo a ficar mais visível
         input("Press Enter to continue...") # Sistema para mostrar sujestão a sujestão, em que o utilizador pressionar enter o programa mostra a seguinte sugestão
+        if n == len(data['features']):
+            print('You found', len(data['features']), 'locations')
+            if continue_program():
+                main()
+            else:
+                break
 
 if __name__ == "__main__":
     main()
