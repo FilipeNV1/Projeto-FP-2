@@ -1,5 +1,3 @@
-#Autores 119192 ; 119253
-
 import requests
 import json
 
